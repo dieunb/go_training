@@ -10,7 +10,7 @@ import (
 func main() {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/books/{title}/page/{page}", BookHandler)
+	r.HandleFunc("/books/{title}/page/{page}", BookHandler).Methods("GET")
 
 	http.ListenAndServe(":4000", r)
 }
