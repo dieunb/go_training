@@ -10,7 +10,9 @@ import (
 )
 
 const (
-	PORT = "4000"
+	ASSETS_DIR = "/assets/"
+	STATIC_DIR = "/static/"
+	PORT       = "4000"
 )
 
 type Book struct {
@@ -23,7 +25,7 @@ type BookToRead struct {
 }
 
 func main() {
-	router := mux.NewRouter()
+	router := NewRouter()
 
 	router.HandleFunc("/", BookToReadHandler).Methods("GET")
 
@@ -35,6 +37,16 @@ func main() {
 	if err != nil {
 		log.Fatal("ListenAndServe Error: ", err)
 	}
+}
+
+func NewRouter() *mux.Router {
+	router := mux.NewRouter().StrictSlash(true)
+
+	// Server CSS, JS & Images Statically.
+	router.
+		PathPrefix(STATIC_DIR).
+		Handler(http.StripPrefix(STATIC_DIR, http.FileServer(http.Dir("."+ASSETS_DIR))))
+	return router
 }
 
 func BookToReadHandler(w http.ResponseWriter, r *http.Request) {
