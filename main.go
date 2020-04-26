@@ -2,10 +2,15 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"text/template"
 
 	"github.com/gorilla/mux"
+)
+
+const (
+	PORT = "4000"
 )
 
 type Book struct {
@@ -18,14 +23,18 @@ type BookToRead struct {
 }
 
 func main() {
-	r := mux.NewRouter()
+	router := mux.NewRouter()
 
-	r.HandleFunc("/", BookToReadHandler).Methods("GET")
+	router.HandleFunc("/", BookToReadHandler).Methods("GET")
 
-	r.HandleFunc("/books/{title}/page/{page}", BookHandler).Methods("GET")
-	r.HandleFunc("/books/{title}", DeleteBookHandler).Methods("DELETE")
+	router.HandleFunc("/books/{title}/page/{page}", BookHandler).Methods("GET")
+	router.HandleFunc("/books/{title}", DeleteBookHandler).Methods("DELETE")
 
-	http.ListenAndServe(":4000", r)
+	err := http.ListenAndServe(":"+PORT, router)
+
+	if err != nil {
+		log.Fatal("ListenAndServe Error: ", err)
+	}
 }
 
 func BookToReadHandler(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +48,11 @@ func BookToReadHandler(w http.ResponseWriter, r *http.Request) {
 			{Title: "Go"},
 		},
 	}
-	tmpl.Execute(w, data)
+	err := tmpl.Execute(w, data)
+
+	if err != nil {
+		log.Fatal("Render error ", err)
+	}
 }
 
 func BookHandler(w http.ResponseWriter, r *http.Request) {
