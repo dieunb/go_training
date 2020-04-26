@@ -27,10 +27,10 @@ type BookToRead struct {
 func main() {
 	router := NewRouter()
 
-	router.HandleFunc("/", BookToReadHandler).Methods("GET")
+	router.HandleFunc("/", logging(BookToReadHandler)).Methods("GET")
 
-	router.HandleFunc("/books/{title}/page/{page}", BookHandler).Methods("GET")
-	router.HandleFunc("/books/{title}", DeleteBookHandler).Methods("DELETE")
+	router.HandleFunc("/books/{title}/page/{page}", logging(BookHandler)).Methods("GET")
+	router.HandleFunc("/books/{title}", logging(DeleteBookHandler)).Methods("DELETE")
 
 	err := http.ListenAndServe(":"+PORT, router)
 
