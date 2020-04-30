@@ -10,5 +10,9 @@ go run main.go
 
 Access your web by `http://localhost:4000`
 
+# Project folder structure
+
+I am following this [guide](https://github.com/golang-standards/project-layout)
+
 # Exercise
 Base on API and build a website with the same UI https://getbootstrap.com/docs/4.4/examples/pricing/
