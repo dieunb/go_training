@@ -4,16 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"text/template"
 
+	"github.com/dieunb/go_training/configs"
 	"github.com/gorilla/mux"
-)
-
-const (
-	ASSETS_DIR = "/assets/"
-	STATIC_DIR = "/static/"
-	PORT       = "4000"
 )
 
 type Book struct {
@@ -33,15 +27,7 @@ func main() {
 	router.HandleFunc("/books/{title}/page/{page}", logging(BookHandler)).Methods("GET")
 	router.HandleFunc("/books/{title}", logging(DeleteBookHandler)).Methods("DELETE")
 
-	port := func() string {
-		val, ok := os.LookupEnv("PORT")
-		if ok {
-			return val
-		}
-		return PORT
-	}
-
-	err := http.ListenAndServe(":"+port(), router)
+	err := http.ListenAndServe(":"+configs.Port(), router)
 
 	if err != nil {
 		log.Fatal("ListenAndServe Error: ", err)
@@ -53,8 +39,8 @@ func NewRouter() *mux.Router {
 
 	// Server CSS, JS & Images Statically.
 	router.
-		PathPrefix(STATIC_DIR).
-		Handler(http.StripPrefix(STATIC_DIR, http.FileServer(http.Dir("."+ASSETS_DIR))))
+		PathPrefix(configs.STATIC_DIR).
+		Handler(http.StripPrefix(configs.STATIC_DIR, http.FileServer(http.Dir("."+configs.ASSETS_DIR))))
 	return router
 }
 
