@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"text/template"
 
 	"github.com/gorilla/mux"
@@ -32,7 +33,15 @@ func main() {
 	router.HandleFunc("/books/{title}/page/{page}", logging(BookHandler)).Methods("GET")
 	router.HandleFunc("/books/{title}", logging(DeleteBookHandler)).Methods("DELETE")
 
-	err := http.ListenAndServe(":"+PORT, router)
+	port := func() string {
+		val, ok := os.LookupEnv("PORT")
+		if ok {
+			return val
+		}
+		return PORT
+	}
+
+	err := http.ListenAndServe(":"+port(), router)
 
 	if err != nil {
 		log.Fatal("ListenAndServe Error: ", err)
