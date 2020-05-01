@@ -13,9 +13,21 @@ type PricingIndexData struct {
 }
 
 func PricingIndex(w http.ResponseWriter, r *http.Request) {
-	pricing := PricingIndexData{
-		"Quickly build an effective pricing table for your potential customers with this Bootstrap example. It’s built with default Bootstrap components and utilities with little customization.",
-		[]models.Pricing{
+	js, err := json.Marshal(pricingData())
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
+}
+
+func pricingData() PricingIndexData {
+	data := PricingIndexData{
+		Description: "Quickly build an effective pricing table for your potential customers with this Bootstrap example. It’s built with default Bootstrap components and utilities with little customization.",
+		Data: []models.Pricing{
 			models.Pricing{
 				Title:  "Free",
 				Amount: 0,
@@ -34,15 +46,44 @@ func PricingIndex(w http.ResponseWriter, r *http.Request) {
 					},
 				},
 			},
+			models.Pricing{
+				Title:  "Pro",
+				Amount: 15,
+				Features: []models.Feature{
+					models.Feature{
+						Name: "20 users included",
+					},
+					models.Feature{
+						Name: "10 GB of storage",
+					},
+					models.Feature{
+						Name: "Priority email support",
+					},
+					models.Feature{
+						Name: "Help center access",
+					},
+				},
+			},
+			models.Pricing{
+				Title:  "Enterprise",
+				Amount: 29,
+				Features: []models.Feature{
+					models.Feature{
+						Name: "30 users included",
+					},
+					models.Feature{
+						Name: "15 GB of storage",
+					},
+					models.Feature{
+						Name: "Phone and email support",
+					},
+					models.Feature{
+						Name: "Help center access",
+					},
+				},
+			},
 		},
 	}
-	js, err := json.Marshal(pricing)
 
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
+	return data
 }
