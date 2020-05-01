@@ -1,11 +1,11 @@
 package models
 
 type Pricing struct {
-	Title    string
-	Amount   int
-	Features []Feature
+	Title    string    `json:"title"`
+	Amount   int       `json:"amount"`
+	Features []Feature `json:"features"`
 }
 
 type Feature struct {
-	Name string
+	Name string `json:"name"`
 }

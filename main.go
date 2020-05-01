@@ -14,9 +14,10 @@ func main() {
 	router := NewRouter()
 
 	router.HandleFunc("/", middlewares.Logging(controllers.BookIndex)).Methods("GET")
-
 	router.HandleFunc("/books/{title}/page/{page}", middlewares.Logging(controllers.BookShow)).Methods("GET")
 	router.HandleFunc("/books/{title}", middlewares.Logging(controllers.BookDelete)).Methods("DELETE")
+
+	router.HandleFunc("/api/pricing", middlewares.Logging(controllers.PricingIndex)).Methods("GET")
 
 	err := http.ListenAndServe(":"+configs.Port(), router)
 
