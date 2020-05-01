@@ -13,7 +13,7 @@ import (
 func main() {
 	router := NewRouter()
 
-	router.HandleFunc("/", middlewares.Logging(controllers.BookIndex)).Methods("GET")
+	router.HandleFunc("/", middlewares.Logging(controllers.HomeIndex)).Methods("GET")
 	router.HandleFunc("/books/{title}/page/{page}", middlewares.Logging(controllers.BookShow)).Methods("GET")
 	router.HandleFunc("/books/{title}", middlewares.Logging(controllers.BookDelete)).Methods("DELETE")
 
