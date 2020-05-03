@@ -13,13 +13,29 @@ import (
 func main() {
 	router := NewRouter()
 
-	router.HandleFunc("/", middlewares.Chain(controllers.HomeIndex, middlewares.Method("GET"), middlewares.Logging())).Methods("GET")
+	router.HandleFunc("/",
+		middlewares.Chain(
+			controllers.HomeIndex,
+			middlewares.Method("GET"),
+			middlewares.Logging(),
+		)).Methods("GET")
 
-	router.HandleFunc("/books/{title}/page/{page}", middlewares.Chain(controllers.BookShow, middlewares.Method("GET"), middlewares.Logging())).Methods("GET")
+	router.HandleFunc("/books/{title}/page/{page}",
+		middlewares.Chain(
+			controllers.BookShow,
+			middlewares.Method("GET"),
+			middlewares.Logging(),
+		)).Methods("GET")
 
 	router.HandleFunc("/books/{title}", middlewares.Chain(controllers.BookDelete, middlewares.Method("DELETE"), middlewares.Logging())).Methods("DELETE")
 
 	router.HandleFunc("/api/pricing", middlewares.Chain(controllers.PricingIndex, middlewares.Method("GET"), middlewares.Logging())).Methods("GET")
+
+	router.HandleFunc("/secret", middlewares.Chain(controllers.Secret, middlewares.Method("GET"), middlewares.Logging())).Methods("GET")
+
+	router.HandleFunc("/login", middlewares.Chain(controllers.Login, middlewares.Method("GET"), middlewares.Logging())).Methods("GET")
+
+	router.HandleFunc("/logout", middlewares.Chain(controllers.Logout, middlewares.Method("DELETE"), middlewares.Logging())).Methods("DELETE")
 
 	err := http.ListenAndServe(":"+configs.Port(), router)
 
