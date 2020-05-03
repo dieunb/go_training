@@ -13,11 +13,13 @@ import (
 func main() {
 	router := NewRouter()
 
-	router.HandleFunc("/", middlewares.Logging(controllers.HomeIndex)).Methods("GET")
-	router.HandleFunc("/books/{title}/page/{page}", middlewares.Logging(controllers.BookShow)).Methods("GET")
-	router.HandleFunc("/books/{title}", middlewares.Logging(controllers.BookDelete)).Methods("DELETE")
+	router.HandleFunc("/", middlewares.Chain(controllers.HomeIndex, middlewares.Method("GET"), middlewares.Logging())).Methods("GET")
 
-	router.HandleFunc("/api/pricing", middlewares.Logging(controllers.PricingIndex)).Methods("GET")
+	router.HandleFunc("/books/{title}/page/{page}", middlewares.Chain(controllers.BookShow, middlewares.Method("GET"), middlewares.Logging())).Methods("GET")
+
+	router.HandleFunc("/books/{title}", middlewares.Chain(controllers.BookDelete, middlewares.Method("DELETE"), middlewares.Logging())).Methods("DELETE")
+
+	router.HandleFunc("/api/pricing", middlewares.Chain(controllers.PricingIndex, middlewares.Method("GET"), middlewares.Logging())).Methods("GET")
 
 	err := http.ListenAndServe(":"+configs.Port(), router)
 
